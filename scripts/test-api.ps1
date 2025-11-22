@@ -63,6 +63,17 @@ try {
     Write-Host "Animation Suggestions:" -ForegroundColor Cyan
     Write-Host ($response.animationSuggestions -join ", ") -ForegroundColor Yellow
     Write-Host ""
+    
+    # Save image if generated
+    if ($response.imageData -and $response.imageStatus -eq "generated") {
+        $imageBytes = [Convert]::FromBase64String($response.imageData)
+        [IO.File]::WriteAllBytes("knight.png", $imageBytes)
+        Write-Host "✓ Image saved as knight.png" -ForegroundColor Green
+        Write-Host ""
+    } elseif ($response.imageStatus -eq "text-only") {
+        Write-Host "⚠ Image generation not available (text-only mode)" -ForegroundColor Yellow
+        Write-Host ""
+    }
 } catch {
     Write-Host "✗ Failed to generate pixel art" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
@@ -92,6 +103,14 @@ try {
     Write-Host "Suggested Colors:" -ForegroundColor Cyan
     Write-Host ($response.suggestedColors -join ", ") -ForegroundColor Magenta
     Write-Host ""
+    
+    # Save image if generated
+    if ($response.imageData -and $response.imageStatus -eq "generated") {
+        $imageBytes = [Convert]::FromBase64String($response.imageData)
+        [IO.File]::WriteAllBytes("fire-sword.png", $imageBytes)
+        Write-Host "✓ Image saved as fire-sword.png" -ForegroundColor Green
+        Write-Host ""
+    }
 } catch {
     Write-Host "✗ Failed to generate pixel art" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red

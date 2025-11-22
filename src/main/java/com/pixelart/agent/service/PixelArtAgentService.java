@@ -244,15 +244,24 @@ public class PixelArtAgentService {
             int width = Integer.parseInt(dimensions[0].trim());
             int height = dimensions.length > 1 ? Integer.parseInt(dimensions[1].trim()) : width;
             
-            // Create a concise prompt for image generation
-            String imagePrompt = buildImagePrompt(description, request);
+            // Detect if animations/spritesheet is needed
+            boolean needsSpritesheet = needsSpritesheet(request, response);
+            int frameCount = needsSpritesheet ? determineFrameCount(response) : 1;
             
-            log.debug("Attempting to generate image with dimensions: {}x{}", width, height);
-            String imageData = imageGenerationService.generateImage(imagePrompt, width, height);
+            // Create a concise prompt for image generation
+            String imagePrompt = buildImagePrompt(description, request, needsSpritesheet, frameCount);
+            
+            if (needsSpritesheet) {
+                log.debug("Generating spritesheet with {} frames, base dimensions: {}x{}", frameCount, width, height);
+            } else {
+                log.debug("Generating single sprite with dimensions: {}x{}", width, height);
+            }
+            
+            String imageData = imageGenerationService.generateImage(imagePrompt, width, height, needsSpritesheet, frameCount);
             
             if (imageData != null && !imageData.isEmpty()) {
                 response.setImageData(imageData);
-                response.setImageStatus("generated");
+                response.setImageStatus(needsSpritesheet ? "spritesheet-generated" : "generated");
                 log.info("Image generated successfully");
             } else {
                 response.setImageStatus("text-only");
@@ -267,15 +276,66 @@ public class PixelArtAgentService {
     }
 
     /**
+     * Check if the request needs a spritesheet (multiple frames)
+     */
+    private boolean needsSpritesheet(PixelArtRequest request, PixelArtResponse response) {
+        String context = request.getAdditionalContext() != null ? request.getAdditionalContext().toLowerCase() : "";
+        List<String> animations = response.getAnimationSuggestions();
+        
+        // Check for animation-related keywords
+        return context.contains("animation") 
+            || context.contains("frames") 
+            || context.contains("spritesheet")
+            || context.contains("poses")
+            || (animations != null && animations.size() > 1);
+    }
+
+    /**
+     * Determine how many frames the spritesheet should have
+     */
+    private int determineFrameCount(PixelArtResponse response) {
+        List<String> animations = response.getAnimationSuggestions();
+        
+        if (animations == null || animations.isEmpty()) {
+            return 4; // Default to 4 frames
+        }
+        
+        // Assign typical frame counts per animation type
+        int totalFrames = 0;
+        for (String animation : animations) {
+            switch (animation.toLowerCase()) {
+                case "idle": totalFrames += 2; break;
+                case "walk": totalFrames += 4; break;
+                case "run": totalFrames += 4; break;
+                case "jump": totalFrames += 3; break;
+                case "attack": totalFrames += 3; break;
+                case "death": totalFrames += 4; break;
+                default: totalFrames += 2; break;
+            }
+        }
+        
+        // Cap at 8 frames to keep spritesheet reasonable
+        return Math.min(totalFrames, 8);
+    }
+
+    /**
      * Build a concise prompt for image generation from the AI description
      */
-    private String buildImagePrompt(String description, PixelArtRequest request) {
+    private String buildImagePrompt(String description, PixelArtRequest request, boolean isSpritesheet, int frameCount) {
         // Extract key visual elements from the description
         String assetType = request.getAssetType() != null ? request.getAssetType() : "";
         String style = request.getStyle() != null ? request.getStyle() : "pixel art";
         String userDescription = request.getDescription() != null ? request.getDescription() : "";
         
         // Build a focused prompt
-        return String.format("%s %s, %s style", assetType, userDescription, style);
+        StringBuilder prompt = new StringBuilder();
+        prompt.append(String.format("%s %s, %s style", assetType, userDescription, style));
+        
+        // Add spritesheet context if needed
+        if (isSpritesheet && frameCount > 1) {
+            prompt.append(String.format(", %d animation frames", frameCount));
+        }
+        
+        return prompt.toString();
     }
 }

@@ -105,6 +105,45 @@ public class PixelArtController {
     }
 
     /**
+     * Generate pixel art and return the actual PNG image file directly
+     */
+    @PostMapping("/generate/image")
+    public ResponseEntity<byte[]> generatePixelArtImage(@RequestBody PixelArtRequest request) {
+        log.info("Received request to generate pixel art image: {}", request.getAssetType());
+        
+        try {
+            PixelArtResponse response = pixelArtAgentService.generatePixelArt(request);
+            
+            // Check if image was generated
+            if (response.getImageData() != null && !response.getImageData().isEmpty()) {
+                // Decode base64 image data
+                byte[] imageBytes = java.util.Base64.getDecoder().decode(response.getImageData());
+                
+                String filename = String.format("pixel-art-%s-%s.png", 
+                    request.getAssetType().toLowerCase(),
+                    System.currentTimeMillis());
+                
+                return ResponseEntity.ok()
+                        .header("Content-Type", "image/png")
+                        .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
+                        .header("X-Image-Status", response.getImageStatus())
+                        .header("X-Description", response.getDetailedDescription())
+                        .body(imageBytes);
+            } else {
+                // No image generated, return error
+                log.warn("Image generation failed - Stable Diffusion may not be available");
+                return ResponseEntity.status(503)
+                        .header("X-Image-Status", "text-only")
+                        .header("X-Error", "Stable Diffusion not available")
+                        .body(null);
+            }
+        } catch (Exception e) {
+            log.error("Error generating pixel art image", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
      * Download generated image as PNG file
      */
     @GetMapping("/image/{responseId}")

@@ -4,11 +4,11 @@ echo Starting Stable Diffusion WebUI
 echo ========================================
 echo.
 
-echo Starting Stable Diffusion container...
+echo Starting Stable Diffusion container with CPU-compatible settings...
 docker run -d ^
   --name stable-diffusion ^
   -p 7860:7860 ^
-  -e CLI_ARGS="--api --listen --port 7860" ^
+  -e CLI_ARGS="--api --listen --port 7860 --no-half --precision full --skip-torch-cuda-test --disable-nan-check" ^
   ghcr.io/neggles/sd-webui-docker:main
 
 if %errorlevel% equ 0 (

@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "pixel-art-agent-collection",
 		"name": "Pixel Art Agent API",
-		"description": "Spring AI powered agent for generating pixel art and 2D sprite descriptions using Ollama (qwen3-vl:4b)",
+		"description": "Spring AI powered agent for generating pixel art and 2D sprites with image generation using Ollama (qwen3-vl:4b) and Stable Diffusion",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "pixel-art-agent"
 	},
@@ -428,6 +428,227 @@
 				"description": "Refine the health potion design by simplifying it"
 			},
 			"response": []
+		},
+		{
+			"name": "Generate with Image - Cyber Ninja",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A futuristic cyber ninja with neon accents\",\n  \"style\": \"32-bit\",\n  \"colorPalette\": \"neon\",\n  \"size\": \"48x48\",\n  \"additionalContext\": \"Cyberpunk aesthetic with glowing blue details\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate pixel art with actual PNG image data (requires Stable Diffusion running). Check imageStatus field: 'generated' means image was created, 'text-only' means SD unavailable."
+			},
+			"response": []
+		},
+		{
+			"name": "Generate with Image - Magic Crystal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"item\",\n  \"description\": \"A glowing magic crystal with purple aura\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"mystical\",\n  \"size\": \"24x24\",\n  \"additionalContext\": \"Should emit a magical glow effect\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a magic crystal with Base64-encoded PNG image data in the response"
+			},
+			"response": []
+		},
+		{
+			"name": "Test Image Generation Status",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A simple test sprite\",\n  \"style\": \"8-bit\",\n  \"size\": \"16x16\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Quick test to check if image generation is working. Look for imageStatus: 'generated' (SD running) or 'text-only' (SD not available)"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Direct PNG - Knight Character",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A brave knight with a sword and shield\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"medieval\",\n  \"size\": \"32x32\",\n  \"additionalContext\": \"Should have idle and attack animations\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"image"
+					]
+				},
+				"description": "Generate pixel art and return the actual PNG image file directly (not JSON). Response is a PNG file that can be viewed/saved. Returns 503 if Stable Diffusion unavailable."
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Direct PNG - Fire Dragon",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"enemy\",\n  \"description\": \"A fierce fire dragon with wings and flames\",\n  \"style\": \"32-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"64x64\",\n  \"additionalContext\": \"Epic boss monster with breathing fire animation\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"image"
+					]
+				},
+				"description": "Generate a fire dragon and return PNG directly. Check response headers for X-Image-Status and X-Description."
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Direct PNG - Magic Potion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"item\",\n  \"description\": \"A glowing blue mana potion\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"mystical\",\n  \"size\": \"16x16\",\n  \"additionalContext\": \"Should have sparkle effects\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"image"
+					]
+				},
+				"description": "Generate a mana potion item and return PNG file directly. Response is image/png content type."
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Direct PNG - Cyber Sword",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"weapon\",\n  \"description\": \"A futuristic cyber sword with neon glow\",\n  \"style\": \"32-bit\",\n  \"colorPalette\": \"neon\",\n  \"size\": \"32x16\",\n  \"additionalContext\": \"Cyberpunk style with electric blue glow effect\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"image"
+					]
+				},
+				"description": "Generate a cyber sword weapon as PNG file. Use 'Send and Download' to save the image."
+			},
+			"response": []
 		}
 	],
 	"variable": [
@@ -435,6 +656,71 @@
 			"key": "baseUrl",
 			"value": "http://localhost:8080",
 			"type": "string"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Test script for JSON responses",
+					"if (pm.response.code === 200 && pm.response.headers.get('Content-Type').includes('application/json')) {",
+					"    const jsonData = pm.response.json();",
+					"    ",
+					"    // Check if image was generated",
+					"    if (jsonData.imageStatus === 'generated' && jsonData.imageData) {",
+					"        console.log('✓ Image generated successfully!');",
+					"        console.log('Image data size: ' + jsonData.imageData.length + ' bytes (Base64)');",
+					"        console.log('To save: decode the imageData field from Base64 to PNG');",
+					"    } else if (jsonData.imageStatus === 'text-only') {",
+					"        console.log('⚠ Text-only mode: Stable Diffusion not available');",
+					"    }",
+					"    ",
+					"    // Log response summary",
+					"    if (jsonData.detailedDescription) {",
+					"        console.log('Description: ' + jsonData.detailedDescription.substring(0, 100) + '...');",
+					"    }",
+					"    if (jsonData.suggestedColors && jsonData.suggestedColors.length > 0) {",
+					"        console.log('Colors: ' + jsonData.suggestedColors.join(', '));",
+					"    }",
+					"}",
+					"",
+					"// Test script for PNG image responses",
+					"if (pm.response.code === 200 && pm.response.headers.get('Content-Type') === 'image/png') {",
+					"    console.log('✓ PNG image received!');",
+					"    console.log('Image size: ' + pm.response.size().body + ' bytes');",
+					"    ",
+					"    const imageStatus = pm.response.headers.get('X-Image-Status');",
+					"    const description = pm.response.headers.get('X-Description');",
+					"    ",
+					"    if (imageStatus) {",
+					"        console.log('Status: ' + imageStatus);",
+					"    }",
+					"    if (description) {",
+					"        console.log('Description: ' + description.substring(0, 100) + '...');",
+					"    }",
+					"    ",
+					"    console.log('💾 Use \"Send and Download\" to save the PNG file');",
+					"}",
+					"",
+					"// Handle Stable Diffusion unavailable",
+					"if (pm.response.code === 503) {",
+					"    const error = pm.response.headers.get('X-Error');",
+					"    console.log('⚠ Service Unavailable: ' + error);",
+					"    console.log('Stable Diffusion needs to be running for image generation');",
+					"}"
+				]
+			}
 		}
 	]
 }
