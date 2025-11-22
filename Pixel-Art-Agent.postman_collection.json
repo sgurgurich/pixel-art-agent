@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "pixel-art-agent-collection",
+		"name": "Pixel Art Agent API",
+		"description": "Spring AI powered agent for generating pixel art and 2D sprite descriptions using Ollama (qwen3-vl:4b)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "pixel-art-agent"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"health"
+					]
+				},
+				"description": "Check if the Pixel Art Agent service is running"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Example Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/example",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"example"
+					]
+				},
+				"description": "Get an example request payload for reference"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Knight Character",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A brave knight with a sword and shield\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"medieval\",\n  \"size\": \"32x32\",\n  \"additionalContext\": \"Should have idle and attack animations\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a knight character"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Fire Sword",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"weapon\",\n  \"description\": \"A magical fire sword with flames\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"32x16\",\n  \"additionalContext\": \"Should have a glowing effect\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a fire sword weapon"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Slime Enemy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"enemy\",\n  \"description\": \"A cute bouncing slime monster\",\n  \"style\": \"8-bit\",\n  \"colorPalette\": \"pastel\",\n  \"size\": \"16x16\",\n  \"additionalContext\": \"Should have bounce and damage animations\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a slime enemy"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Health Potion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"item\",\n  \"description\": \"A red health potion in a glass bottle\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"16x16\",\n  \"additionalContext\": \"Should sparkle or glow slightly\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a health potion item"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Grass Tile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"tile\",\n  \"description\": \"A grass ground tile with small flowers\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"natural\",\n  \"size\": \"32x32\",\n  \"additionalContext\": \"Should tile seamlessly\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a grass tile"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Pixel Art - Dragon Boss",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"enemy\",\n  \"description\": \"A fierce red dragon boss with wings\",\n  \"style\": \"32-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"64x64\",\n  \"additionalContext\": \"Should have idle, fly, and breathe fire animations\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate"
+					]
+				},
+				"description": "Generate a detailed pixel art description for a dragon boss"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Variations - 3 Knight Variations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A brave knight with a sword and shield\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"medieval\",\n  \"size\": \"32x32\",\n  \"additionalContext\": \"Should have idle and attack animations\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/variations?count=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"variations"
+					],
+					"query": [
+						{
+							"key": "count",
+							"value": "3",
+							"description": "Number of variations to generate (default: 3)"
+						}
+					]
+				},
+				"description": "Generate 3 variations of the knight character design"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Variations - 5 Weapon Variations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"weapon\",\n  \"description\": \"A magical sword\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"32x16\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/generate/variations?count=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"generate",
+						"variations"
+					],
+					"query": [
+						{
+							"key": "count",
+							"value": "5",
+							"description": "Number of variations to generate"
+						}
+					]
+				},
+				"description": "Generate 5 variations of a magical sword weapon"
+			},
+			"response": []
+		},
+		{
+			"name": "Refine Pixel Art - Make More Colorful",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"character\",\n  \"description\": \"A brave knight with a sword and shield\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"medieval\",\n  \"size\": \"32x32\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/refine?feedback=make it more colorful and vibrant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"refine"
+					],
+					"query": [
+						{
+							"key": "feedback",
+							"value": "make it more colorful and vibrant",
+							"description": "Feedback to refine the design"
+						}
+					]
+				},
+				"description": "Refine the knight design with feedback to make it more colorful"
+			},
+			"response": []
+		},
+		{
+			"name": "Refine Pixel Art - Add More Detail",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"enemy\",\n  \"description\": \"A fierce red dragon boss with wings\",\n  \"style\": \"32-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"64x64\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/refine?feedback=add more scales and make the wings more detailed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"refine"
+					],
+					"query": [
+						{
+							"key": "feedback",
+							"value": "add more scales and make the wings more detailed",
+							"description": "Feedback to refine the design"
+						}
+					]
+				},
+				"description": "Refine the dragon design with feedback to add more detail"
+			},
+			"response": []
+		},
+		{
+			"name": "Refine Pixel Art - Simplify Design",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assetType\": \"item\",\n  \"description\": \"A red health potion in a glass bottle\",\n  \"style\": \"16-bit\",\n  \"colorPalette\": \"vibrant\",\n  \"size\": \"16x16\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pixelart/refine?feedback=simplify the design to make it more readable at small sizes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pixelart",
+						"refine"
+					],
+					"query": [
+						{
+							"key": "feedback",
+							"value": "simplify the design to make it more readable at small sizes",
+							"description": "Feedback to refine the design"
+						}
+					]
+				},
+				"description": "Refine the health potion design by simplifying it"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
