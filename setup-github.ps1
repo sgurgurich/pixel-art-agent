@@ -6,7 +6,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check if git is initialized
-if (-not (Test-Path .git)) {
+if (-not (Test-Path ".git")) {
     Write-Host "ERROR: Git not initialized. Run 'git init' first." -ForegroundColor Red
     exit 1
 }
