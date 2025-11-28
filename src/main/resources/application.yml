@@ -1,0 +1,132 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pixel-art-agent
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:3b
+          temperature: 0.8
+          top-p: 0.9
+
+logging:
+  level:
+    root: INFO
+    com.pixelart.agent: DEBUG
+    org.springframework.ai: DEBUG
+
+# Pixel Art Agent Configuration
+pixelart:
+  # ============================================================
+  # Model Configuration - Choose between mock and real models
+  # ============================================================
+  models:
+    # Set to true for local development (no external dependencies)
+    # Set to false to use real Ollama and Stable Diffusion
+    use-mock: true
+
+  # Individual model toggles (can override pixelart.models.use-mock)
+  chat-model:
+    # Set to false to use real Ollama model
+    mock-responses-enabled: true
+
+  image-model:
+    # Set to false to use real Stable Diffusion model
+    mock-responses-enabled: true
+
+  # ============================================================
+  # Agent Settings
+  # ============================================================
+  agent:
+    max-iterations: 3
+    default-style: pixel-art
+
+  # ============================================================
+  # Image Generation Settings
+  # ============================================================
+  image:
+    generation:
+      enabled: true
+      api-url: http://localhost:7860
+      model: stable-diffusion
+      # Optional: Specify LoRA model name (without .safetensors extension)
+      lora: ""
+      lora-strength: 0.8
+
+  # ============================================================
+  # Mock Response Configuration
+  # Customize mock responses here without changing code
+  # ============================================================
+  mock:
+    # Map of response index to response text
+    # These cycle through as requests come in
+    chat-responses:
+      0: |
+        Visual Description:
+        A classic warrior character with a helmet, armor plating on the chest and shoulders, 
+        holding a sword. The design follows 16-bit SNES aesthetics with distinct color blocks 
+        and clear silhouette. The warrior stands in a neutral ready position.
+        
+        Color Palette:
+        #2C3E50 (dark blue) for shadows
+        #34495E (medium blue-gray) for armor base
+        #E74C3C (red) for cloth/cape
+        #F39C12 (gold) for helmet trim
+        #ECF0F1 (light gray) for highlights
+        
+        Technical Specifications:
+        Dimensions: 32x32 pixels
+        Layers: background, base armor, details, highlights
+        
+        Animation Suggestions:
+        idle: breathing animation with subtle shoulder movement
+        walk: 4-frame walking cycle with swinging arms
+        attack: 3-frame sword slash animation
+
+      1: |
+        Visual Description:
+        A treasure chest in isometric view, wooden construction with metal bands and a golden lock.
+        Classic RPG-style treasure chest with closed state showing ornate detailing. The design 
+        emphasizes the metallic accents and wooden texture with retro pixel art styling.
+        
+        Color Palette:
+        #8B4513 (brown) for wood
+        #DAA520 (goldenrod) for metal bands and lock
+        #654321 (dark brown) for shadows
+        #FFD700 (gold) for highlights
+        #A0522D (sienna) for depth
+        
+        Technical Specifications:
+        Dimensions: 32x32 pixels
+        Layers: background, wood base, metal bands, lock, highlights
+        
+        Animation Suggestions:
+        idle: static with subtle shadow
+        open: 4-frame opening animation
+
+      2: |
+        Visual Description:
+        A fantasy potion bottle with luminescent contents. Glass bottle design with cork stopper,
+        containing swirling magical energy inside. The design captures an alchemist's potion 
+        with mystical glow effects using limited color palette.
+        
+        Color Palette:
+        #4B0082 (indigo) for potion liquid
+        #9932CC (dark orchid) for magical glow
+        #E6B800 (dark gold) for bottle highlights
+        #228B22 (forest green) for glass tint
+        #FFFACD (light yellow) for bright highlights
+        
+        Technical Specifications:
+        Dimensions: 16x24 pixels
+        Layers: bottle glass, liquid, cork, glow effect
+        
+        Animation Suggestions:
+        idle: gentle swirling animation of contents
+
+    # Description for mock image responses
+    image-response-description: "pixel-art sprite"

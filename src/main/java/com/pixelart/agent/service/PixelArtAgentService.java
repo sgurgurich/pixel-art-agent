@@ -3,8 +3,9 @@ package com.pixelart.agent.service;
 import com.pixelart.agent.model.PixelArtRequest;
 import com.pixelart.agent.model.PixelArtResponse;
 import com.pixelart.agent.model.PixelArtResponse.SpriteSpecification;
+import com.pixelart.agent.service.model.ImageProvider;
+import com.pixelart.agent.service.model.ModelProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,20 +18,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service for generating pixel art and sprite descriptions using Spring AI and Ollama
+ * Service for generating pixel art and sprite descriptions using abstracted model providers
  */
 @Slf4j
 @Service
 public class PixelArtAgentService {
 
-    private final ChatClient chatClient;
+    private final ModelProvider modelProvider;
     private final ImageGenerationService imageGenerationService;
     
     @Value("${pixelart.agent.max-iterations:3}")
     private int maxIterations;
 
-    public PixelArtAgentService(ChatClient.Builder chatClientBuilder, ImageGenerationService imageGenerationService) {
-        this.chatClient = chatClientBuilder.build();
+    public PixelArtAgentService(ModelProvider modelProvider, ImageGenerationService imageGenerationService) {
+        this.modelProvider = modelProvider;
         this.imageGenerationService = imageGenerationService;
     }
 
@@ -44,13 +45,10 @@ public class PixelArtAgentService {
         // Build the prompt for the AI agent
         String prompt = buildPrompt(request);
         
-        // Call Ollama through Spring AI
-        String aiResponse = chatClient.prompt()
-                .user(prompt)
-                .call()
-                .content();
+        // Call model provider (real or mock)
+        String aiResponse = modelProvider.generateResponse(prompt);
 
-        log.debug("AI Response: {}", aiResponse);
+        log.debug("Model Response: {}", aiResponse);
 
         // Parse and structure the response
         PixelArtResponse response = parseAiResponse(aiResponse, request);
@@ -85,10 +83,7 @@ public class PixelArtAgentService {
         
         String refinementPrompt = buildRefinementPrompt(request, feedback);
         
-        String aiResponse = chatClient.prompt()
-                .user(refinementPrompt)
-                .call()
-                .content();
+        String aiResponse = modelProvider.generateResponse(refinementPrompt);
 
         PixelArtResponse response = parseAiResponse(aiResponse, request);
         response.setGeneratedAt(LocalDateTime.now());

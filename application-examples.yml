@@ -1,0 +1,137 @@
+# Example: application-local.yml
+# Use this file for local development with custom mock responses
+# Run with: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.name=application,application-local"
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pixel-art-agent
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:3b
+          temperature: 0.8
+          top-p: 0.9
+
+logging:
+  level:
+    root: INFO
+    com.pixelart.agent: DEBUG
+    org.springframework.ai: DEBUG
+
+pixelart:
+  # Model Configuration
+  models:
+    use-mock: true  # Master toggle for mock models
+  
+  # Chat Model Configuration
+  chat-model:
+    mock-responses-enabled: true  # Use mock responses for chat
+  
+  # Image Model Configuration  
+  image-model:
+    mock-responses-enabled: true  # Use mock responses for images
+  
+  # Agent Settings
+  agent:
+    max-iterations: 3
+    default-style: pixel-art
+  
+  # Image Generation Settings
+  image:
+    generation:
+      enabled: true
+      api-url: http://localhost:7860
+      model: stable-diffusion
+      lora: ""
+      lora-strength: 0.8
+  
+  # Mock Response Customization
+  mock:
+    chat-responses:
+      0: |
+        Visual Description:
+        A custom warrior with a unique design.
+        
+        Color Palette:
+        #FF0000 (red) for main color
+        #FFFFFF (white) for highlights
+        
+        Technical Specifications:
+        Dimensions: 32x32 pixels
+        
+        Animation Suggestions:
+        idle: simple breathing animation
+        
+      1: |
+        Visual Description:
+        A custom dragon enemy.
+        
+        Color Palette:
+        #FFD700 (gold) for body
+        #000000 (black) for shadows
+        
+        Technical Specifications:
+        Dimensions: 48x48 pixels
+        
+        Animation Suggestions:
+        idle: wing flapping
+        
+    image-response-description: "custom pixel art sprite"
+
+---
+# Example: application-production.yml
+# Use this file for production with real models
+# Requires Ollama and Stable Diffusion running
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pixel-art-agent
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:3b
+          temperature: 0.8
+          top-p: 0.9
+
+logging:
+  level:
+    root: WARN
+    com.pixelart.agent: INFO
+    org.springframework.ai: WARN
+
+pixelart:
+  # Model Configuration
+  models:
+    use-mock: false  # Use real models
+  
+  # Chat Model Configuration
+  chat-model:
+    mock-responses-enabled: false  # Use real Ollama
+  
+  # Image Model Configuration  
+  image-model:
+    mock-responses-enabled: false  # Use real Stable Diffusion
+  
+  # Agent Settings
+  agent:
+    max-iterations: 3
+    default-style: pixel-art
+  
+  # Image Generation Settings
+  image:
+    generation:
+      enabled: true
+      api-url: http://localhost:7860
+      model: stable-diffusion
+      lora: "pixel-art-style"  # Use LoRA model in production
+      lora-strength: 0.8

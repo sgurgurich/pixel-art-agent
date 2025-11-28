@@ -1,116 +1,287 @@
 # Pixel Art Agent 🎨
 
-A Spring AI powered agent for generating detailed pixel art and 2D sprite descriptions for video games using Ollama (Qwen 2.5:3b), with Stable Diffusion image generation for actual sprite images.
+A Spring AI powered agent for generating detailed pixel art and 2D sprite descriptions with full abstraction for AI models and mock support for local development.
 
 [![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Spring AI](https://img.shields.io/badge/Spring%20AI-1.0.0--M3-blue.svg)](https://spring.io/projects/spring-ai)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📖 Documentation
+## 📑 Table of Contents
 
-- **[Architecture Guide (PDF)](docs/Pixel-Art-Agent-Architecture.pdf)** - Complete system architecture with diagrams
-- **[Architecture (HTML)](docs/ARCHITECTURE.html)** - Interactive web version with Mermaid diagrams
+- [🎯 Quick Start](#-quick-start)
+- [🚀 Key Features](#-key-features)
+- [📋 Prerequisites](#-prerequisites)
+- [⚙️ Configuration](#️-configuration)
+- [🏗️ Model Abstraction](#️-model-abstraction-architecture)
+- [📊 Configuration Reference](#-full-configuration-reference)
+- [🎮 API Endpoints](#-api-endpoints)
+- [📝 Usage Examples](#-usage-examples)
+- [🏗️ Architecture](#️-architecture)
+- [🎨 Supported Assets & Styles](#-supported-asset-types)
+- [🖼️ Image Generation](#️-image-generation)
+- [🛠️ Development](#️-development)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [🚀 Deployment](#-deployment)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
 
-## 🚀 Features
+## 🎯 Quick Start
 
-- 🤖 **AI-Powered Generation** - Uses Spring AI with Ollama (Qwen 2.5:3b) for intelligent sprite descriptions
-- 🖼️ **Actual Image Generation** - Stable Diffusion integration creates real pixel art sprites
-- 🎞️ **Spritesheet Support** - Automatically generates multi-frame spritesheets for animations
-- 🎮 **Game Asset Types** - Characters, weapons, tiles, enemies, items, UI elements
-- 🎨 **Multiple Art Styles** - 8-bit, 16-bit, 32-bit, isometric, retro game styles
-- 🔄 **Variations** - Generate multiple design variations
-- ✨ **Refinement** - Iteratively improve designs with feedback
-- 📊 **Technical Specs** - Color palettes, dimensions, animation suggestions, layer breakdown
-- 🐳 **Docker Support** - Containerized deployment for Ollama and Stable Diffusion
-- 📋 **REST API** - Simple JSON-based endpoints with base64 image data
+**Run locally with mock models (no external dependencies):**
+
+```bash
+./mvnw spring-boot:run
+```
+
+**Test the API:**
+
+```bash
+curl -X POST http://localhost:8080/api/pixelart/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "assetType": "character",
+    "description": "a warrior with sword",
+    "style": "16-bit",
+    "colorPalette": "vibrant",
+    "size": "32x32"
+  }'
+```
+
+## 🚀 Key Features
+
+- ✅ **Run Offline** - Mock models enabled by default, no external dependencies needed
+- 🤖 **AI-Powered** - Uses Spring AI with Ollama (Qwen 2.5:3b) for intelligent descriptions
+- 🖼️ **Image Generation** - Stable Diffusion integration for pixel art sprite creation
+- ⚙️ **Configuration-Driven** - Switch between mock and real models with a single property
+- 🎞️ **Spritesheet Support** - Generate multi-frame animations automatically
+- 🎮 **Game Assets** - Characters, weapons, tiles, enemies, items, UI elements
+- 🎨 **Art Styles** - 8-bit, 16-bit, 32-bit, isometric, retro game styles
+- 🧪 **Fully Testable** - Mock providers for instant testing
+- 📊 **Technical Specs** - Color palettes, dimensions, animation suggestions
+- 🔄 **Refinement** - Iteratively improve designs with feedback
 
 ## 📋 Prerequisites
 
 - **Java 17 or higher**
 - **Maven 3.6+**
-- **Docker** (for Ollama and Stable Diffusion)
-- **16 GB RAM minimum** (for running all services)
+- Optional: **Docker** (only needed for real Ollama and Stable Diffusion)
+- Optional: **16 GB RAM** (only for running actual AI services)
 
-## 🚀 Quick Start (5 Minutes)
+## ⚙️ Configuration
 
-### Step 1: Start Ollama
+### Run with Mock Models (Default - Recommended for Development)
+
+By default, the app runs with mock providers that require **no external dependencies**:
 
 ```bash
-# Start Ollama container
-docker run -d --name ollama -p 11434:11434 -v ollama-data:/root/.ollama ollama/ollama
+./mvnw spring-boot:run
+```
 
-# Pull the Qwen model (1.9 GB download)
+**Configuration:**
+```properties
+# In application.properties (default)
+pixelart.models.use-mock=true
+```
+
+Mock mode features:
+- ✅ Instant responses (milliseconds)
+- ✅ No Ollama or Stable Diffusion needed
+- ✅ Realistic cycling responses (warrior → chest → potion)
+- ✅ Perfect for development and testing
+
+### Switch to Real Models
+
+To use actual AI models, update your configuration:
+
+```properties
+# In application.properties
+pixelart.models.use-mock=false
+pixelart.chat-model.mock-responses-enabled=false
+pixelart.image-model.mock-responses-enabled=false
+```
+
+Then start the AI services:
+
+```bash
+# Terminal 1: Start Ollama
+docker run -d --name ollama -p 11434:11434 -v ollama-data:/root/.ollama ollama/ollama
 docker exec ollama ollama pull qwen2.5:3b
 
-# Verify it's running
-curl http://localhost:11434/api/tags
-```
-
-### Step 2: Start Stable Diffusion (Optional but Recommended)
-
-```bash
-# Run the setup script
-.\scripts\start-stable-diffusion.bat
-
-# Or manually with Docker
+# Terminal 2: Start Stable Diffusion  
 docker run -d --name stable-diffusion -p 7860:7860 \
   -v sd-models:/data/StableDiffusion \
-  -e CLI_ARGS="--api --listen --port 7860 --no-half --precision full --skip-torch-cuda-test --disable-nan-check" \
+  -e CLI_ARGS="--api --listen --port 7860 --no-half --precision full" \
   ghcr.io/neggles/sd-webui-docker:main
+
+# Terminal 3: Start the app
+./mvnw spring-boot:run
 ```
 
-Wait 2-3 minutes for Stable Diffusion to download the default model (4 GB) and start.
+### Mixed Mode (Mock Chat + Real Images)
 
-### Step 3: Start the Application
-
-```bash
-# Using the start script (Windows)
-.\scripts\start.bat
-
-# Or using Maven directly
-mvn spring-boot:run
+```properties
+pixelart.models.use-mock=false
+pixelart.chat-model.mock-responses-enabled=true   # Uses mock chat
+pixelart.image-model.mock-responses-enabled=false # Uses real images
 ```
 
-The application will start on `http://localhost:8080`
+### Customize Mock Responses
 
-### Step 4: Test the API
-
-```powershell
-# Test with PowerShell
-.\scripts\test-api.ps1
-
-# Or manually
-curl http://localhost:8080/api/pixelart/health
+In `application.properties`:
+```properties
+pixelart.mock.chat-responses[0]=Your custom warrior description
+pixelart.mock.chat-responses[1]=Your custom chest description
+pixelart.mock.chat-responses[2]=Your custom potion description
 ```
 
-## 💻 Configuration
+Or in `application.yml`:
+```yaml
+pixelart:
+  mock:
+    chat-responses:
+      0: "Custom warrior response"
+      1: "Custom chest response"
+      2: "Custom potion response"
+```
 
-Edit `src/main/resources/application.properties`:
+## 🏗️ Model Abstraction Architecture
+
+The project now uses a clean abstraction layer for AI models:
+
+### Two Models Abstracted
+
+| Model | Purpose | Real Provider | Mock Provider |
+|-------|---------|--------------|---------------|
+| **Chat** | Generates pixel art descriptions | `OllamaModelProvider` | `MockModelProvider` |
+| **Image** | Generates pixel art images | `StableDiffusionImageProvider` | `MockImageProvider` |
+
+### Provider Interfaces
+
+```java
+// Chat model interface
+public interface ModelProvider {
+    String generateResponse(String prompt);
+    boolean isAvailable();
+}
+
+// Image generation interface  
+public interface ImageProvider {
+    String generateImage(String prompt, int width, int height);
+    String generateImage(String prompt, int width, int height, boolean isSpritesheet, int frameCount);
+    boolean isAvailable();
+}
+```
+
+### Configuration-Driven Selection
+
+The `ModelConfig` bean automatically selects the correct providers:
+
+```java
+@Configuration
+public class ModelConfig {
+    
+    @Bean
+    public ModelProvider modelProvider(/* ... */) {
+        if (properties.models.useMock()) {
+            return new MockModelProvider(mockConfig);
+        }
+        return new OllamaModelProvider(chatClient);
+    }
+    
+    @Bean
+    public ImageProvider imageProvider(/* ... */) {
+        if (properties.models.useMock()) {
+            return new MockImageProvider();
+        }
+        return new StableDiffusionImageProvider();
+    }
+}
+```
+
+### Service Integration
+
+Services now depend on abstractions, not concrete implementations:
+
+```java
+@Service
+public class PixelArtAgentService {
+    private final ModelProvider modelProvider;
+    
+    public PixelArtAgentService(ModelProvider modelProvider) {
+        this.modelProvider = modelProvider;
+    }
+    
+    public PixelArtResponse generatePixelArt(String prompt) {
+        // Uses either real or mock provider based on config
+        String description = modelProvider.generateResponse(prompt);
+        return new PixelArtResponse(description);
+    }
+}
+```
+
+## 📊 Full Configuration Reference
+
+### application.properties
 
 ```properties
 # Server
 server.port=8080
 
-# Ollama Configuration
+# Model Configuration (REFACTORED)
+pixelart.models.use-mock=true
+pixelart.chat-model.mock-responses-enabled=true
+pixelart.image-model.mock-responses-enabled=true
+
+# Ollama Settings
 spring.ai.ollama.base-url=http://localhost:11434
 spring.ai.ollama.chat.options.model=qwen2.5:3b
 spring.ai.ollama.chat.options.temperature=0.8
 spring.ai.ollama.chat.options.top-p=0.9
 
-# Agent Settings
-pixelart.agent.max-iterations=3
-pixelart.agent.default-style=pixel-art
-
-# Image Generation (Stable Diffusion)
+# Image Generation
 pixelart.image.generation.enabled=true
 pixelart.image.generation.api-url=http://localhost:7860
 pixelart.image.generation.model=stable-diffusion
-
-# Optional: LoRA Model for specialized pixel art
 pixelart.image.generation.lora=
 pixelart.image.generation.lora-strength=0.8
+
+# Mock Response Configuration
+pixelart.mock.chat-responses[0]=Realistic warrior description...
+pixelart.mock.chat-responses[1]=Realistic chest description...
+pixelart.mock.chat-responses[2]=Realistic potion description...
 ```
+
+### application.yml
+
+```yaml
+server:
+  port: 8080
+
+pixelart:
+  models:
+    use-mock: true                    # Master toggle for mock mode
+  chat-model:
+    mock-responses-enabled: true      # Override for chat model only
+  image-model:
+    mock-responses-enabled: true      # Override for image model only
+  mock:
+    chat-responses:
+      0: "Warrior description..."
+      1: "Chest description..."
+      2: "Potion description..."
+
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:3b
+          temperature: 0.8
+```
+
+
 
 ## 🎮 API Endpoints
 
